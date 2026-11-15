@@ -1,0 +1,47 @@
+[recruit.html 이미지 넣는 법]
+1. 아래 프롬프트로 구글 Flow에서 이미지를 만든다.
+2. 파일 이름을 그대로 맞춰서 insurance-site/assets/recruit/ 폴더에 넣는다. (폴더가 없으면 만들기)
+3. 페이지를 새로고침하면 자리표시 대신 사진이 자동으로 들어간다. 코드 수정 필요 없음.
+
+※ 실존 인물(연예인·직원 등) 얼굴은 만들지 말 것. 실제 직원 사진을 쓸 경우 본인 동의 받은 사진으로.
+※ 영화 포스터, DAKS 수건, 와인 세트는 실물/공식 이미지를 쓰는 게 맞음 (생성 X).
+
+------------------------------------------------------------
+1) hseminar-hero.jpg   (세로형 4:5 · H 세미나 초대장 왼쪽 사진)
+------------------------------------------------------------
+Professional Korean male insurance consultant in a navy suit and dark red tie, confident smile, raising one fist in a "fighting" pose, upper body, standing on the left side of the frame, night city skyline with warm golden lights and a tall office tower in the background, cinematic lighting, dark navy and gold color palette, shallow depth of field, editorial corporate photo, no text, no logo
+
+------------------------------------------------------------
+2) hseminar-stairs.jpg   (가로형 4:3 · "H 세미나에서 직접 확인하세요" 옆)
+------------------------------------------------------------
+Silhouettes of two businesspeople climbing a staircase toward a small orange flag at the top, warm golden sunset light, soft white and peach background, minimal, success and growth concept, clean composition with empty space on the left, no text
+
+------------------------------------------------------------
+3) manado-main.jpg   (세로형 3:4 · 마나도 메인)
+------------------------------------------------------------
+Tropical beach resort in Manado, North Sulawesi, Indonesia, turquoise water, palm trees, a volcano island (Manado Tua) on the horizon, red hibiscus flowers in the foreground, bright sunny travel-magazine photo, vivid colors, no text
+
+------------------------------------------------------------
+4) tour1.jpg ~ tour7.jpg   (가로형 4:3 · 투어 7개 썸네일)
+------------------------------------------------------------
+tour1.jpg  부나켄 클래식 스노클링 투어
+  Snorkeler swimming above a colorful coral reef with a sea turtle, clear blue water, Bunaken marine park, underwater photo, no text
+tour2.jpg  부나켄 시크릿 샌드 모래섬 & 스노클링
+  Woman sitting at the bow of a small wooden boat approaching a white sandbar island, turquoise sea, volcano in the distance, from behind, no text
+tour3.jpg  리하가섬 투어
+  Hammock between palm trees on a white sand beach of a small tropical island, crystal clear water, sunny day, no text
+tour4.jpg  토모혼 라이브 투어
+  Colorful traditional local market in Tomohon, Indonesia, fresh fruits and vegetables, busy stalls, warm daylight, no faces in close-up, no text
+tour5.jpg  토모혼 그랜드 투어
+  Traveler silhouette standing on a hill overlooking a misty volcanic valley at golden hour, Tomohon highlands, no text
+tour6.jpg  탕코코 와일드
+  Tiny tarsier primate clinging to a tree branch in a lush green rainforest, big eyes, Tangkoko nature reserve, wildlife photo, no text
+tour7.jpg  사왕완 정글 래프팅
+  Group rafting through white water rapids in a dense jungle river, splashing water, adventure travel photo, people in helmets seen from a distance, no text
+
+------------------------------------------------------------
+직접 준비할 실물 이미지 (생성하지 말 것)
+------------------------------------------------------------
+movie-poster.jpg   영화 〈하트 오브 비스트〉 공식 포스터 (세로 3:4, 배급사·극장 제공 이미지)
+gift-towel.jpg     DAKS 호텔수건 상품 사진 (정사각형)
+gift-wine.jpg      와인 선물 세트 상품 사진 (정사각형)
