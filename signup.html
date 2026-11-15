@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>회원가입 | 한화생명금융서비스</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="assets/auth.css">
+</head>
+<body>
+<div class="top"><div class="in"><a href="index.html"><img src="assets/logo.png" alt="한화생명금융서비스"></a><a class="home" href="index.html">메인으로</a></div></div>
+<main>
+  <form class="card" id="form" novalidate>
+    <h1>회원가입</h1>
+    <p class="sub">이메일 하나로 간편하게 가입하세요.</p>
+    <div class="msg" id="msg" role="alert"></div>
+    <div class="field"><label for="name">이름</label><input id="name" class="input" autocomplete="name" required placeholder="홍길동"></div>
+    <div class="field"><label for="email">이메일</label><input id="email" class="input" type="email" autocomplete="email" required placeholder="name@example.com"></div>
+    <div class="field"><label for="pw">비밀번호</label><input id="pw" class="input" type="password" autocomplete="new-password" required minlength="8"><div class="hint">8자 이상</div></div>
+    <div class="field"><label for="pw2">비밀번호 확인</label><input id="pw2" class="input" type="password" autocomplete="new-password" required></div>
+    <div class="field"><label for="phone">휴대폰 (선택)</label><input id="phone" class="input" type="tel" autocomplete="tel" placeholder="010-0000-0000"></div>
+    <label class="agree"><input type="checkbox" id="agree"><span>[필수] 이용약관 및 개인정보 수집·이용에 동의합니다.</span></label>
+    <button class="btn" id="go">가입하기</button>
+    <div class="links"><span>이미 회원이신가요?</span><a href="login.html">로그인</a></div>
+  </form>
+</main>
+<footer>© 2026 Hanwha Life Financial Service</footer>
+
+<script type="module">
+  import { signUp, errText } from "./assets/fb.js";
+  const $ = (id) => document.getElementById(id);
+  const fail = (text, el) => { $("msg").textContent = text; $("msg").className = "msg err"; el && el.focus(); };
+
+  $("form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const name = $("name").value.trim(), email = $("email").value.trim();
+    const pw = $("pw").value, pw2 = $("pw2").value, phone = $("phone").value.trim();
+    if (!name) return fail("이름을 입력해 주세요.", $("name"));
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail("이메일 형식을 확인해 주세요.", $("email"));
+    if (pw.length < 8) return fail("비밀번호는 8자 이상으로 정해 주세요.", $("pw"));
+    if (pw !== pw2) return fail("비밀번호가 서로 달라요.", $("pw2"));
+    if (phone && !/^01[016789]-?\d{3,4}-?\d{4}$/.test(phone)) return fail("휴대폰 번호를 확인해 주세요.", $("phone"));
+    if (!$("agree").checked) return fail("필수 약관에 동의해 주세요.", $("agree"));
+    $("go").disabled = true; $("go").textContent = "가입 중…";
+    try {
+      await signUp({ name, email, password: pw, phone });
+      location.replace("index.html");
+    } catch (err) {
+      fail(errText(err)); $("go").disabled = false; $("go").textContent = "가입하기";
+    }
+  });
+</script>
+</body>
+</html>

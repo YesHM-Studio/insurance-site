@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>로그인 | 한화생명금융서비스</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="assets/auth.css">
+</head>
+<body>
+<div class="top"><div class="in"><a href="index.html"><img src="assets/logo.png" alt="한화생명금융서비스"></a><a class="home" href="index.html">메인으로</a></div></div>
+<main>
+  <div class="card">
+    <!-- 로그인 -->
+    <form id="loginForm" novalidate>
+      <h1>로그인</h1>
+      <p class="sub">가입한 이메일로 로그인하세요.</p>
+      <div class="msg" id="msg" role="alert"></div>
+      <div class="field"><label for="email">이메일</label><input id="email" class="input" type="email" autocomplete="email" required placeholder="name@example.com"></div>
+      <div class="field"><label for="pw">비밀번호</label><input id="pw" class="input" type="password" autocomplete="current-password" required></div>
+      <button class="btn" id="go">로그인</button>
+      <div class="links"><a href="#" id="toReset">비밀번호 찾기</a><span>·</span><a href="signup.html">회원가입</a></div>
+    </form>
+
+    <!-- 비밀번호 재설정 -->
+    <form id="resetForm" novalidate hidden>
+      <h1>비밀번호 찾기</h1>
+      <p class="sub">가입한 이메일로 재설정 링크를 보내드려요.</p>
+      <div class="msg" id="rmsg" role="alert"></div>
+      <div class="field"><label for="remail">이메일</label><input id="remail" class="input" type="email" autocomplete="email" required placeholder="name@example.com"></div>
+      <button class="btn" id="rgo">재설정 메일 보내기</button>
+      <div class="links"><a href="#" id="toLogin">로그인으로 돌아가기</a></div>
+    </form>
+  </div>
+</main>
+<footer>© 2026 Hanwha Life Financial Service</footer>
+
+<script type="module">
+  import { signIn, resetPassword, errText, onUser } from "./assets/fb.js";
+  const $ = (id) => document.getElementById(id);
+  const show = (el, text, ok) => { el.textContent = text; el.className = "msg " + (ok ? "ok" : "err"); };
+  const next = new URLSearchParams(location.search).get("next");
+  const dest = next && /^[\w-]+\.html(#[\w-]*)?$/.test(next) ? next : "index.html";
+
+  if (new URLSearchParams(location.search).get("signup") === "done") show($("msg"), "가입이 완료됐어요. 로그인해 주세요.", true);
+  onUser((u) => { if (u) location.replace(dest); });
+
+  $("loginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = $("email").value.trim(), pw = $("pw").value;
+    if (!email || !pw) return show($("msg"), "이메일과 비밀번호를 입력해 주세요.");
+    $("go").disabled = true; $("go").textContent = "확인 중…";
+    try { await signIn(email, pw); location.replace(dest); }
+    catch (err) { show($("msg"), errText(err)); $("go").disabled = false; $("go").textContent = "로그인"; }
+  });
+
+  $("toReset").addEventListener("click", (e) => { e.preventDefault(); $("loginForm").hidden = true; $("resetForm").hidden = false; $("remail").value = $("email").value; $("remail").focus(); });
+  $("toLogin").addEventListener("click", (e) => { e.preventDefault(); $("resetForm").hidden = true; $("loginForm").hidden = false; });
+
+  $("resetForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = $("remail").value.trim();
+    if (!email) return show($("rmsg"), "이메일을 입력해 주세요.");
+    $("rgo").disabled = true;
+    try { await resetPassword(email); }
+    catch (err) { if (err.code !== "auth/user-not-found") { show($("rmsg"), errText(err)); $("rgo").disabled = false; return; } }
+    // 가입 여부를 알려주지 않도록 항상 같은 안내
+    show($("rmsg"), "가입된 이메일이라면 재설정 링크를 보냈어요. 메일함(스팸함 포함)을 확인해 주세요.", true);
+    $("rgo").disabled = false;
+  });
+</script>
+</body>
+</html>

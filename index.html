@@ -568,7 +568,7 @@
       <span>보험금 청구 24시간 접수</span>
     </div>
     <div class="util-right">
-      <a href="#">로그인</a><a href="#">회원가입</a><a href="#">지점 찾기</a><a href="recruit.html">FP 채용·세미나</a>
+      <span id="authLinks" style="display:contents"><a href="login.html">로그인</a><a href="signup.html">회원가입</a></span><a href="#">지점 찾기</a><a href="recruit.html">FP 채용·세미나</a>
     </div>
   </div>
 </div>
@@ -1356,15 +1356,31 @@
   $('cAge').addEventListener('input', calc);
   calc();
 
-  /* 상담 폼 (시안: 전송 없음) */
-  $('consultForm').addEventListener('submit', e => {
+  /* 상담 폼 → Firebase(consults)에 저장 */
+  $('consultForm').addEventListener('submit', async e => {
     e.preventDefault();
-    const f = e.target;
+    const f = e.target, btn = f.querySelector('button.btn');
     const bad = [...f.querySelectorAll('[required]')].find(el => el.type === 'checkbox' ? !el.checked : !el.value.trim());
     if (bad) { bad.focus(); bad.reportValidity && bad.reportValidity(); return; }
-    $('done').style.display = 'block';
-    f.reset(); $('p1').checked = true;
+    if (!/^01[016789]-?\d{3,4}-?\d{4}$/.test($('phone').value.trim())) { $('phone').setCustomValidity('휴대폰 번호를 확인해 주세요.'); $('phone').reportValidity(); $('phone').setCustomValidity(''); return; }
+    const done = $('done');
+    btn.disabled = true; const label = btn.textContent; btn.textContent = '접수 중…';
+    try {
+      const fb = await import('./assets/fb.js');
+      await fb.saveForm('consults', {
+        name: $('name').value.trim(), phone: $('phone').value.trim(),
+        interests: [...f.querySelectorAll('.pick input:checked')].map(i => f.querySelector(`label[for="${i.id}"]`).textContent),
+        region: $('region').value, time: $('time').value, agreed: true,
+      });
+      done.textContent = '상담 신청이 접수되었습니다. 곧 담당 설계사가 연락드릴게요.'; done.style.color = '';
+      f.reset(); $('p1').checked = true;
+    } catch (err) {
+      const fb = await import('./assets/fb.js').catch(() => null);
+      done.textContent = fb ? fb.errText(err) : '접수에 실패했어요. 1588-6363으로 연락 주세요.'; done.style.color = '#B42318';
+    }
+    done.style.display = 'block'; btn.disabled = false; btn.textContent = label;
   });
 </script>
+<script type="module">import { mountUtilBar } from "./assets/fb.js"; mountUtilBar(document.getElementById("authLinks"));</script>
 </body>
 </html>

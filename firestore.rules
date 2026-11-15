@@ -1,0 +1,31 @@
+rules_version = '2';
+// Firebase 콘솔 → Firestore Database → 규칙(Rules) 탭에 이 내용을 그대로 붙여넣고 "게시"하세요.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 회원 정보: 본인만 읽기/쓰기
+    match /users/{uid} {
+      allow read, update: if request.auth != null && request.auth.uid == uid;
+      allow create: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.name is string && request.resource.data.name.size() <= 40;
+    }
+
+    // 상담 신청: 누구나 접수만 가능, 사이트에서 조회 불가(콘솔에서 확인)
+    match /consults/{id} {
+      allow create: if request.resource.data.agreed == true
+        && request.resource.data.name is string && request.resource.data.name.size() between 1 and 40
+        && request.resource.data.phone is string && request.resource.data.phone.size() between 9 and 20
+        && request.resource.data.keys().size() <= 10;
+      allow read, update, delete: if false;
+    }
+
+    // 세미나·채용 신청: 동일
+    match /applies/{id} {
+      allow create: if request.resource.data.agreed == true
+        && request.resource.data.name is string && request.resource.data.name.size() between 1 and 40
+        && request.resource.data.phone is string && request.resource.data.phone.size() between 9 and 20
+        && request.resource.data.keys().size() <= 10;
+      allow read, update, delete: if false;
+    }
+  }
+}
